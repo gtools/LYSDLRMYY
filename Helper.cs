@@ -90,14 +90,14 @@ namespace LYSDLRMYY
             FileHelper.DirClear(path);
         }
 
-        ///// <summary>
-        ///// 打开文件目录
-        ///// </summary>
-        ///// <param name="dirname">路径</param>
-        //public void OpenDirPath(string dirname)
-        //{
-        //    FileHelper.OpenDir(PathDir(dirname));
-        //}
+        /// <summary>
+        /// 打开文件目录
+        /// </summary>
+        /// <param name="dirname">路径</param>
+        public void OpenDirPath(string dirname)
+        {
+            FileHelper.OpenDir(DirPath(dirname));
+        }
 
 
 

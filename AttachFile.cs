@@ -63,8 +63,8 @@ namespace LYSDLRMYY
             string filename = Params[2].ToString();
             //是否覆盖
             bool b = bool.Parse(Params[3].ToString());
-            string dir = Helper.DirPath(url, dirname);
-            string file = Helper.DirPath(dir, filename);
+            string dir = Helper.DirPath(dirname);
+            string file = dir + filename;
             FileHelper.DirCreate(dir);
             //如果存在并且需要覆盖的
             if (b || !FileHelper.FileExists(file))
