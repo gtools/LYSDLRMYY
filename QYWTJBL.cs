@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
+using GTSharp;
+using GTSharp.Core;
 
 namespace LYSDLRMYY
 {
@@ -79,15 +81,15 @@ namespace LYSDLRMYY
             //帮助
             Helper h = new Helper();
             //模版路径
-            string template_dir_path = h.PathDir(template_dir);
-            string template_file_path = h.PathFile(template_dir, template_file);
+            string template_dir_path = Helper.DirPath(template_dir);
+            string template_file_path = template_dir_path + template_file;
             //保存路径
-            string temp_dir_path = h.PathDir(temp_dir);
-            string temp_file_path = h.PathFile(temp_dir, temp_file);
-            GTSharp.Core.FileHelper.DirCreate(template_dir_path, false);
-            GTSharp.Core.FileHelper.DirCreate(temp_dir_path, false);
+            string temp_dir_path = Helper.DirPath(temp_dir);
+            string temp_file_path = template_dir_path + temp_file;
+            FileHelper.DirCreate(template_dir_path, false);
+            FileHelper.DirCreate(temp_dir_path, false);
             //清空保存目录
-            h.DirClear(temp_dir);
+            Helper.DirClear(temp_dir);
             //写入数据结束行
             int endrow = beginrow + data.Rows.Count - 1;
             //写入数据结束行
@@ -100,16 +102,16 @@ namespace LYSDLRMYY
             DataTable distinct = dataview.ToTable(true, "科室");
             foreach (DataRow item in distinct.Rows)
             {
-                DataTable dttemp = h.DataTableSelect(data, "科室='" + item[0].ToString() + "'", "住院号");
+                DataTable dttemp = Helper.DataTableSelect(data, "科室='" + item[0].ToString() + "'", "住院号");
                 //没数据返回
                 if (dttemp.Rows.Count <= 0)
                     continue;
                 //导入模版
-                GTSharp.Core.ExcelHelper exl = new GTSharp.Core.ExcelHelper(template_file_path);
+                ExcelHelper exl = new ExcelHelper(template_file_path);
                 //设置单元格日期
-                h.SetReplace_DATE(addday, exl);
-                //设置单元格日期
-                h.SetReplace_NUM(dttemp.Rows.Count, exl.GetCell(1, 2), exl);
+                exl.GetFirst().SetReplace("[DATE]", DateTime.Now.AddDays(addday).ToString("yyyy年MM月dd日"));
+                //设置单元格计数
+                exl.GetFirstColumn(2).SetReplace("[NUM]", dttemp.Rows.Count.ToString());
                 //导出数据到Excel
                 exl.DataTableToExcel(dttemp, beginrow);
                 //写入数据结束行

@@ -4,6 +4,9 @@ using GTSharp;
 
 namespace LYSDLRMYY
 {
+    /// <summary>
+    /// 短信
+    /// </summary>
     public class SMS
     {
         /// <summary>

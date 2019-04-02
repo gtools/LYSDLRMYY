@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>3</LangVersion>
+    <DocumentationFile>bin\Debug\LYSDLRMYY.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AttachFile.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="MYYZCXBB.cs" />
     <Compile Include="MRYZCXBB.cs" />
     <Compile Include="QYWTJBL.cs" />
     <Compile Include="SMS.cs" />

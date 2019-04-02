@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using GTSharp;
+using GTSharp.Core;
 
 namespace LYSDLRMYY
 {
@@ -51,7 +52,7 @@ namespace LYSDLRMYY
         }
 
         /// <summary>
-        /// 导出模板：每周1全院未交病历.xls
+        /// 导出模板：每日1科室在院人数一览表.xls
         /// 参数
         /// 0：DataTable数据
         /// 1：写入数据开始行
@@ -77,18 +78,14 @@ namespace LYSDLRMYY
             string temp_dir = Params[5].ToString();
             //保存文件
             string temp_file = Params[6].ToString();
-            //帮助
-            Helper h = new Helper();
             //模版路径
-            string template_dir_path = h.PathDir(template_dir);
-            string template_file_path = h.PathFile(template_dir, template_file);
+            string template_dir_path = Helper.DirPath(template_dir);
+            string template_file_path = template_dir_path + template_file;
             //保存路径
-            string temp_dir_path = h.PathDir(temp_dir);
-            string temp_file_path = h.PathFile(temp_dir, temp_file);
-            GTSharp.Core.FileHelper.DirCreate(template_dir_path, false);
-            GTSharp.Core.FileHelper.DirCreate(temp_dir_path, false);
-            //清空保存目录
-            //h.DirClear(temp_dir);
+            string temp_dir_path = Helper.DirPath(temp_dir);
+            string temp_file_path = template_dir_path + temp_file;
+            FileHelper.DirCreate(template_dir_path, false);
+            FileHelper.DirCreate(temp_dir_path, false);
             //写入数据结束行
             int endrow = beginrow + data.Rows.Count - 1;
             //写入数据结束行
@@ -96,17 +93,15 @@ namespace LYSDLRMYY
             //临时数据
             string _temp = string.Empty;
             //导入模版
-            GTSharp.Core.ExcelHelper exl = new GTSharp.Core.ExcelHelper(template_file_path);
+            ExcelHelper exl = new ExcelHelper(template_file_path);
             //设置单元格日期
-            h.SetReplace_DATE(addday, exl);
-            //设置单元格计数
-            //h.SetReplace_NUM(data.Rows.Count, exl.GetCell(1, 2), exl);
+            exl.GetFirst().SetReplace("[DATE]", DateTime.Now.AddDays(addday).ToString("yyyy年MM月dd日"));
             //导出数据到Excel
             exl.DataTableToExcel(data, beginrow);
             //添加边框
-            exl.StyleLine(exl.GetRange(beginrow, 1, endrow, column));
+            exl.GetRange(beginrow, 1, endrow, column).StyleLine();
             //添加字体红色
-            h.StyleFontColorRedRow(endrow, exl);
+            exl.GetRow(endrow).StyleFontColorRed();
             //合计为0删除列
             for (int i = data.Columns.Count; i >= 1; i--)
             {
@@ -124,7 +119,7 @@ namespace LYSDLRMYY
         }
 
         /// <summary>
-        /// 导出模板：每周2按手术时间统计手术人数表.xls
+        /// 导出模板：每日2按手术时间统计手术人数表.xls
         /// 参数
         /// 0：DataTable数据
         /// 1：写入数据开始行
@@ -150,18 +145,14 @@ namespace LYSDLRMYY
             string temp_dir = Params[5].ToString();
             //保存文件
             string temp_file = Params[6].ToString();
-            //帮助
-            Helper h = new Helper();
             //模版路径
-            string template_dir_path = h.PathDir(template_dir);
-            string template_file_path = h.PathFile(template_dir, template_file);
+            string template_dir_path = Helper.DirPath(template_dir);
+            string template_file_path = template_dir_path + template_file;
             //保存路径
-            string temp_dir_path = h.PathDir(temp_dir);
-            string temp_file_path = h.PathFile(temp_dir, temp_file);
-            GTSharp.Core.FileHelper.DirCreate(template_dir_path, false);
-            GTSharp.Core.FileHelper.DirCreate(temp_dir_path, false);
-            //清空保存目录
-            //h.DirClear(temp_dir);
+            string temp_dir_path = Helper.DirPath(temp_dir);
+            string temp_file_path = template_dir_path + temp_file;
+            FileHelper.DirCreate(template_dir_path, false);
+            FileHelper.DirCreate(temp_dir_path, false);
             //写入数据结束行
             int endrow = beginrow + data.Rows.Count - 1;
             //写入数据结束行
@@ -169,17 +160,15 @@ namespace LYSDLRMYY
             //临时数据
             string _temp = string.Empty;
             //导入模版
-            GTSharp.Core.ExcelHelper exl = new GTSharp.Core.ExcelHelper(template_file_path);
+            ExcelHelper exl = new ExcelHelper(template_file_path);
             //设置单元格日期
-            h.SetReplace_DATE(addday, exl);
+            exl.GetFirst().SetReplace("[DATE]", DateTime.Now.AddDays(addday).ToString("yyyy年MM月dd日"));
             //设置单元格计数
-            h.SetReplace_NUM(data.Rows.Count, exl.GetCell(2, 1), exl);
+            exl.GetFirstRow(2).SetReplace("[NUM]", data.Rows.Count.ToString());
             //导出数据到Excel
             exl.DataTableToExcel(data, beginrow);
             //添加边框
-            exl.StyleLine(exl.GetRange(beginrow, 1, endrow, column));
-            //添加字体红色
-            //h.StyleFontColorRedRow(endrow, exl);
+            exl.GetRange(beginrow, 1, endrow, column).StyleLine();
             //保存
             exl.SaveAsFile(temp_file_path);
             Thread.Sleep(50);
@@ -188,7 +177,7 @@ namespace LYSDLRMYY
         }
 
         /// <summary>
-        /// 导出模板：每周3在院危重病人患者明细表.xls
+        /// 导出模板：每日3在院危重病人患者明细表.xls
         /// 参数
         /// 0：DataTable数据
         /// 1：写入数据开始行
@@ -214,18 +203,14 @@ namespace LYSDLRMYY
             string temp_dir = Params[5].ToString();
             //保存文件
             string temp_file = Params[6].ToString();
-            //帮助
-            Helper h = new Helper();
             //模版路径
-            string template_dir_path = h.PathDir(template_dir);
-            string template_file_path = h.PathFile(template_dir, template_file);
+            string template_dir_path = Helper.DirPath(template_dir);
+            string template_file_path = template_dir_path + template_file;
             //保存路径
-            string temp_dir_path = h.PathDir(temp_dir);
-            string temp_file_path = h.PathFile(temp_dir, temp_file);
-            GTSharp.Core.FileHelper.DirCreate(template_dir_path, false);
-            GTSharp.Core.FileHelper.DirCreate(temp_dir_path, false);
-            //清空保存目录
-            //h.DirClear(temp_dir);
+            string temp_dir_path = Helper.DirPath(temp_dir);
+            string temp_file_path = template_dir_path + temp_file;
+            FileHelper.DirCreate(template_dir_path, false);
+            FileHelper.DirCreate(temp_dir_path, false);
             //写入数据结束行
             int endrow = beginrow + data.Rows.Count - 1;
             //写入数据结束行
@@ -235,9 +220,9 @@ namespace LYSDLRMYY
             //导入模版
             GTSharp.Core.ExcelHelper exl = new GTSharp.Core.ExcelHelper(template_file_path);
             //设置单元格日期
-            h.SetReplace_DATE(addday, exl);
+            exl.GetFirst().SetReplace("[DATE]", DateTime.Now.AddDays(addday).ToString("yyyy年MM月dd日"));
             //设置单元格计数
-            h.SetReplace_NUM(data.Rows.Count, exl.GetCell(2, 1), exl);
+            exl.GetFirstRow(2).SetReplace("[NUM]", data.Rows.Count.ToString());
             //导出数据到Excel
             exl.DataTableToExcel(data, beginrow);
             //添加边框
@@ -247,7 +232,7 @@ namespace LYSDLRMYY
             {
                 _temp = exl.GetCellToText(i + beginrow, column);
                 if (_temp == DateTime.Now.ToString("yyyy-MM-dd") || _temp == DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"))
-                    h.StyleFontColorRedRow(i + beginrow, exl);
+                    exl.GetRow(i + beginrow).StyleFontColorRed();
             }
             //保存
             exl.SaveAsFile(temp_file_path);
@@ -255,14 +240,17 @@ namespace LYSDLRMYY
             //保存并打开
             exl.OpenExcel(temp_file_path);
         }
-
+        
         /// <summary>
-        /// 参数：说明：默认
+        /// 导出模板：每日4在院I级护理患者明细表.xls
+        /// 参数
         /// 0：DataTable数据
-        /// 1：数据开始位置
-        /// 2：日期加天数
-        /// 3：模版位置：\Excel_Template\DailyReport\在院I级护理患者明细表.xls
-        /// 4：保存位置：\Excel_Template\Export\在院I级护理患者明细表.xls
+        /// 1：写入数据开始行
+        /// 2：日期增加天数
+        /// 3：模版文件夹名称
+        /// 4：模版文件名称
+        /// 5：保存文件夹名称
+        /// 6：保存文件名称
         /// </summary>
         public void DailyReport4()
         {
@@ -280,18 +268,14 @@ namespace LYSDLRMYY
             string temp_dir = Params[5].ToString();
             //保存文件
             string temp_file = Params[6].ToString();
-            //帮助
-            Helper h = new Helper();
             //模版路径
-            string template_dir_path = h.PathDir(template_dir);
-            string template_file_path = h.PathFile(template_dir, template_file);
+            string template_dir_path = Helper.DirPath(template_dir);
+            string template_file_path = template_dir_path + template_file;
             //保存路径
-            string temp_dir_path = h.PathDir(temp_dir);
-            string temp_file_path = h.PathFile(temp_dir, temp_file);
-            GTSharp.Core.FileHelper.DirCreate(template_dir_path, false);
-            GTSharp.Core.FileHelper.DirCreate(temp_dir_path, false);
-            //清空保存目录
-            //h.DirClear(temp_dir);
+            string temp_dir_path = Helper.DirPath(temp_dir);
+            string temp_file_path = template_dir_path + temp_file;
+            FileHelper.DirCreate(template_dir_path, false);
+            FileHelper.DirCreate(temp_dir_path, false);
             //写入数据结束行
             int endrow = beginrow + data.Rows.Count - 1;
             //写入数据结束行
@@ -301,9 +285,9 @@ namespace LYSDLRMYY
             //导入模版
             GTSharp.Core.ExcelHelper exl = new GTSharp.Core.ExcelHelper(template_file_path);
             //设置单元格日期
-            h.SetReplace_DATE(addday, exl);
+            exl.GetFirst().SetReplace("[DATE]", DateTime.Now.AddDays(addday).ToString("yyyy年MM月dd日"));
             //设置单元格计数
-            h.SetReplace_NUM(data.Rows.Count, exl.GetCell(2, 1), exl);
+            exl.GetFirstRow(2).SetReplace("[NUM]", data.Rows.Count.ToString());
             //导出数据到Excel
             exl.DataTableToExcel(data, beginrow);
             //添加边框
@@ -313,7 +297,7 @@ namespace LYSDLRMYY
             {
                 _temp = exl.GetCellToText(i + beginrow, column);
                 if (_temp == DateTime.Now.ToString("yyyy-MM-dd") || _temp == DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"))
-                    h.StyleFontColorRedRow(i + beginrow, exl);
+                    exl.GetRow(i + beginrow).StyleFontColorRed();
             }
             //保存
             exl.SaveAsFile(temp_file_path);
@@ -321,14 +305,17 @@ namespace LYSDLRMYY
             //保存并打开
             exl.OpenExcel(temp_file_path);
         }
-
+        
         /// <summary>
-        /// 参数：说明：默认
+        /// 导出模板：每日5主要业务数据表.xls
+        /// 参数
         /// 0：DataTable数据
-        /// 1：数据开始位置
-        /// 2：日期加天数
-        /// 3：模版位置：\Excel_Template\DailyReport\主要业务数据表.xls
-        /// 4：保存位置：\Excel_Template\Export\主要业务数据表.xls
+        /// 1：写入数据开始行
+        /// 2：日期增加天数
+        /// 3：模版文件夹名称
+        /// 4：模版文件名称
+        /// 5：保存文件夹名称
+        /// 6：保存文件名称
         /// </summary>
         public void DailyReport5()
         {
@@ -346,18 +333,14 @@ namespace LYSDLRMYY
             string temp_dir = Params[5].ToString();
             //保存文件
             string temp_file = Params[6].ToString();
-            //帮助
-            Helper h = new Helper();
             //模版路径
-            string template_dir_path = h.PathDir(template_dir);
-            string template_file_path = h.PathFile(template_dir, template_file);
+            string template_dir_path = Helper.DirPath(template_dir);
+            string template_file_path = template_dir_path + template_file;
             //保存路径
-            string temp_dir_path = h.PathDir(temp_dir);
-            string temp_file_path = h.PathFile(temp_dir, temp_file);
-            GTSharp.Core.FileHelper.DirCreate(template_dir_path, false);
-            GTSharp.Core.FileHelper.DirCreate(temp_dir_path, false);
-            //清空保存目录
-            //h.DirClear(temp_dir);
+            string temp_dir_path = Helper.DirPath(temp_dir);
+            string temp_file_path = template_dir_path + temp_file;
+            FileHelper.DirCreate(template_dir_path, false);
+            FileHelper.DirCreate(temp_dir_path, false);
             //写入数据结束行
             int endrow = beginrow + data.Rows.Count - 1;
             //写入数据结束行
@@ -367,7 +350,7 @@ namespace LYSDLRMYY
             //导入模版
             GTSharp.Core.ExcelHelper exl = new GTSharp.Core.ExcelHelper(template_file_path);
             //设置单元格日期
-            h.SetReplace_DATE(addday, exl);
+            exl.GetFirst().SetReplace("[DATE]", DateTime.Now.AddDays(addday).ToString("yyyy年MM月dd日"));
             //设置单元格数据
             //全院收入
             exl.SetCell(5, 6, data.Rows[0][0]);
