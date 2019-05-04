@@ -324,8 +324,14 @@ namespace LYSDLRMYY
             exl.GetFirstRow(2).SetReplace("[NUM]", exl.GetCellToText(endrow, 6));
             //添加边框
             exl.GetRange(beginrow, 1, endrow, column).StyleLine();
-            //字体红色加粗
-            exl.GetRow(endrow).StyleFontColorRed().StyleFontBold();
+            for (int i = 0; i < data.Rows.Count; i++)
+            {
+                if (data.Rows[i][1].ToString().IsNullOrWhiteSpace())
+                {
+                    //字体红色加粗
+                    exl.GetRow(beginrow + i).StyleFontColorRed().StyleFontBold();
+                }
+            }
             //保存
             exl.SaveAsFile(temp_file_path);
             Thread.Sleep(50);
