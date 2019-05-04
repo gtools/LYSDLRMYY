@@ -174,10 +174,10 @@ namespace LYSDLRMYY
             exl.GetFirst().SetReplace("[DATE1]", strtem1 + "和" + strtem2);
             exl.GetCell(2, 2).SetReplace("[DATE2]", strtem4);
             exl.GetCell(2, 3).SetReplace("[DATE3]", strtem3);
-            exl.GetCell(2, 6).SetReplace("[DATE2]", strtem4);
-            exl.GetCell(2, 7).SetReplace("[DATE3]", strtem3);
-            exl.GetCell(2, 10).SetReplace("[DATE2]", strtem4);
-            exl.GetCell(2, 11).SetReplace("[DATE3]", strtem3);
+            exl.GetCell(2, 5).SetReplace("[DATE2]", strtem4);
+            exl.GetCell(2, 6).SetReplace("[DATE3]", strtem3);
+            exl.GetCell(2, 8).SetReplace("[DATE2]", strtem4);
+            exl.GetCell(2, 9).SetReplace("[DATE3]", strtem3);
             //导出数据到Excel
             exl.DataTableToExcel(data, beginrow);
             //添加边框
@@ -318,12 +318,14 @@ namespace LYSDLRMYY
             ExcelHelper exl = new ExcelHelper(template_file_path);
             //设置单元格日期
             exl.GetFirst().SetReplace("[DATE1]", string.Format("{0}-{1}月", beginday.ToString("yyyy年M"), endday.Month.ToString()));
-            //设置单元格计数
-            exl.GetFirstRow(2).SetReplace("[NUM]", exl.GetCellToText(endrow, 6));
             //导出数据到Excel
             exl.DataTableToExcel(data, beginrow);
+            //设置单元格计数
+            exl.GetFirstRow(2).SetReplace("[NUM]", exl.GetCellToText(endrow, 6));
             //添加边框
             exl.GetRange(beginrow, 1, endrow, column).StyleLine();
+            //字体红色加粗
+            exl.GetRow(endrow).StyleFontColorRed().StyleFontBold();
             //保存
             exl.SaveAsFile(temp_file_path);
             Thread.Sleep(50);
